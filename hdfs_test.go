@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	server = "brick5"
-	ssport = 34310
+	server = "localhost"
+	ssport = 9000
 )
 
 func TestConn(t *testing.T) {
