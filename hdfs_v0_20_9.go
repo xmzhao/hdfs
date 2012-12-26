@@ -170,7 +170,7 @@ func (fs *Fs) Exists(path string) error {
 	defer C.free(unsafe.Pointer(p))
 	ret := C.hdfsExists(fs.cptr, p)
 	if ret == C.int(-1) {
-		return fmt.Errorf("Path %s does not exists")
+		return fmt.Errorf("Path %s does not exists", path)
 	}
 	return nil
 }
