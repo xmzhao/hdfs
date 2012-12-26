@@ -102,8 +102,8 @@ func ConnectAsUser(host string, port uint16, user string) (*Fs, error) {
 		u = C.CString(user)
 		defer C.free(unsafe.Pointer(u))
 	}
-  group := C.CString("supergroup")
-  defer C.free(unsafe.Pointer(group))
+	group := C.CString("supergroup")
+	defer C.free(unsafe.Pointer(group))
 
 	ret, err := C.hdfsConnectAsUser(h, C.tPort(port), u, &group, 1)
 	if err != nil && ret == (C.hdfsFS)(unsafe.Pointer(uintptr(0))) {
@@ -151,9 +151,9 @@ func (fs *Fs) OpenFile(path string, flags int, buffersize int, replication int, 
 	return &File{file, new(sync.RWMutex)}, nil
 }
 
-//Close an open file. 
+//Close an open file.
 //file: The file handle.
-//Returns nil on success, or error.  
+//Returns nil on success, or error.
 func (fs *Fs) CloseFile(file *File) error {
 	ret, err := C.hdfsCloseFile(fs.cptr, file.cptr)
 	if err != nil && ret == C.int(-1) {
@@ -168,17 +168,17 @@ func (fs *Fs) CloseFile(file *File) error {
 func (fs *Fs) Exists(path string) error {
 	p := C.CString(path)
 	defer C.free(unsafe.Pointer(p))
-	ret, err := C.hdfsExists(fs.cptr, p)
-	if err != nil && ret == C.int(-1) {
-		return err
+	ret := C.hdfsExists(fs.cptr, p)
+	if ret == C.int(-1) {
+		return fmt.Errorf("Path %s does not exists")
 	}
 	return nil
 }
 
-//Seek to given offset in file. This works only for files opened in read-only mode. 
+//Seek to given offset in file. This works only for files opened in read-only mode.
 //file: The file handle.
 //pos: Offset into the file to seek into.
-//Returns nil on success, or error.  
+//Returns nil on success, or error.
 func (fs *Fs) Seek(file *File, pos int64) error {
 	file.Lock()
 	defer file.Unlock()
@@ -234,7 +234,7 @@ func (fs *Fs) Pread(file *File, position int64, buffer []byte, length int) (uint
 //Write data into an open file.
 //file: The file handle.
 //buffer: The data.
-//length: The no. of bytes to write. 
+//length: The no. of bytes to write.
 //Returns the number of bytes written; or error.
 func (fs *Fs) Write(file *File, buffer []byte, length int) (uint32, error) {
 	file.Lock()
@@ -246,9 +246,9 @@ func (fs *Fs) Write(file *File, buffer []byte, length int) (uint32, error) {
 	return uint32(ret), nil
 }
 
-//Flush the data. 
+//Flush the data.
 //file: The file handle.
-//Returns nil on success, or error. 
+//Returns nil on success, or error.
 func (fs *Fs) Flush(file *File) error {
 	file.Lock()
 	defer file.Unlock()
@@ -261,7 +261,7 @@ func (fs *Fs) Flush(file *File) error {
 
 //Number of bytes that can be read from this input stream without blocking.
 //file: The file handle.
-//Returns available bytes; or error. 
+//Returns available bytes; or error.
 func (fs *Fs) Available(file *File) (uint32, error) {
 	file.RLock()
 	defer file.RUnlock()
@@ -273,10 +273,10 @@ func (fs *Fs) Available(file *File) (uint32, error) {
 }
 
 //Copy file from one filesystem to another.
-//src: The path of source file. 
+//src: The path of source file.
 //dstFS: The handle to destination filesystem.
-//dst: The path of destination file. 
-//Returns nil on success, or error. 
+//dst: The path of destination file.
+//Returns nil on success, or error.
 func (fs *Fs) Copy(src string, dstFS *Fs, dst string) error {
 	srcstr := C.CString(src)
 	dststr := C.CString(dst)
@@ -290,10 +290,10 @@ func (fs *Fs) Copy(src string, dstFS *Fs, dst string) error {
 }
 
 //Move file from one filesystem to another.
-//src: The path of source file. 
+//src: The path of source file.
 //dstFS: The handle to destination filesystem.
-//dst: The path of destination file. 
-//Returns nil on success, or error. 
+//dst: The path of destination file.
+//Returns nil on success, or error.
 func (fs *Fs) Move(src string, dstFS *Fs, dst string) error {
 	srcstr := C.CString(src)
 	dststr := C.CString(dst)
@@ -306,9 +306,9 @@ func (fs *Fs) Move(src string, dstFS *Fs, dst string) error {
 	return nil
 }
 
-//Delete file. 
-//path: The path of the file. 
-//Returns nil on success, or error. 
+//Delete file.
+//path: The path of the file.
+//Returns nil on success, or error.
 func (fs *Fs) Delete(path string) error {
 	p := C.CString(path)
 	defer C.free(unsafe.Pointer(p))
@@ -319,10 +319,10 @@ func (fs *Fs) Delete(path string) error {
 	return nil
 }
 
-//Rename file. 
-//oldpath: The path of the source file. 
-//newpath: The path of the destination file. 
-//Returns nil on success, or error. 
+//Rename file.
+//oldpath: The path of the source file.
+//newpath: The path of the destination file.
+//Returns nil on success, or error.
 func (fs *Fs) Rename(oldpath, newpath string) error {
 	op, np := C.CString(oldpath), C.CString(newpath)
 	defer C.free(unsafe.Pointer(op))
@@ -335,7 +335,7 @@ func (fs *Fs) Rename(oldpath, newpath string) error {
 }
 
 //Get the current working directory for the given filesystem.
-//buffer: The user-buffer to copy path of cwd into. 
+//buffer: The user-buffer to copy path of cwd into.
 //size: The length of user-buffer.
 //Returns buffer, or error.
 func (fs *Fs) GetWorkingDirectory(buffer []byte, size uint32) ([]byte, error) {
@@ -347,8 +347,8 @@ func (fs *Fs) GetWorkingDirectory(buffer []byte, size uint32) ([]byte, error) {
 }
 
 //Set the working directory. All relative paths will be resolved relative to it.
-//path: The path of the new 'cwd'. 
-//Returns nil on success, or error. 
+//path: The path of the new 'cwd'.
+//Returns nil on success, or error.
 func (fs *Fs) SetWorkingDirectory(path string) error {
 	p := C.CString(path)
 	defer C.free(unsafe.Pointer(p))
@@ -360,8 +360,8 @@ func (fs *Fs) SetWorkingDirectory(path string) error {
 }
 
 //Make the given file and all non-existent parents into directories.
-//path: The path of the directory. 
-//Returns nil on success, or error. 
+//path: The path of the directory.
+//Returns nil on success, or error.
 func (fs *Fs) CreateDirectory(path string) error {
 	p := C.CString(path)
 	defer C.free(unsafe.Pointer(p))
@@ -373,8 +373,8 @@ func (fs *Fs) CreateDirectory(path string) error {
 }
 
 //Set the replication of the specified file to the supplied value.
-//path: The path of the file. 
-//Returns nil on success, or error. 
+//path: The path of the file.
+//Returns nil on success, or error.
 func (fs *Fs) SetReplication(path string, replication int16) error {
 	p := C.CString(path)
 	defer C.free(unsafe.Pointer(p))
@@ -386,13 +386,17 @@ func (fs *Fs) SetReplication(path string, replication int16) error {
 }
 
 //Get list of files/directories for a given directory-path.
-//path: The path of the directory. 
+//path: The path of the directory.
 //Returns a slice of FileInfo struct pointer, or nil on error.
 func (fs *Fs) ListDirectory(path string) ([]*FileInfo, error) {
 	var num int
 	p := C.CString(path)
 	defer C.free(unsafe.Pointer(p))
 	info, _ := C.hdfsListDirectory(fs.cptr, p, (*C.int)(unsafe.Pointer(&num)))
+	// Note: 如果一个目录是空的, C.hdfsListDirectory 也会返回 NULL,
+	//       这样, 下面就会返回一个error. 但其实没有错误.
+	//       yiwang和zyxar讨论过这个情况, 他也认同,
+	//       但是他也没有办法区分 C.hdfsListDirectory 的返回歧义.
 	if info == nil {
 		return nil, fmt.Errorf("error in listing directory %s", path)
 	}
@@ -418,7 +422,7 @@ func (fs *Fs) ListDirectory(path string) ([]*FileInfo, error) {
 }
 
 //Get information about a path as a single FileInfo struct pointer.
-//path: The path of the file. 
+//path: The path of the file.
 //Returns a pointer to FileInfo object, or nil on error.
 func (fs *Fs) GetPathInfo(path string) (*FileInfo, error) {
 	p := C.CString(path)
@@ -444,7 +448,7 @@ func (fs *Fs) GetPathInfo(path string) (*FileInfo, error) {
 }
 
 //Get hostnames where a particular block (determined by pos & blocksize) of a file is stored.
-//path: The path of the file. 
+//path: The path of the file.
 //start: The start of the block.
 //length: The length of the block.
 //Returns a 2-D slice of blocks-hosts, or nil on error.
@@ -469,7 +473,7 @@ func (fs *Fs) GetHosts(path string, start, length int64) ([][]string, error) {
 }
 
 //Get the optimum blocksize.
-//Returns the blocksize; -1 on error. 
+//Returns the blocksize; -1 on error.
 func (fs *Fs) GetDefaultBlockSize() (int64, error) {
 	ret, err := C.hdfsGetDefaultBlockSize(fs.cptr)
 	if err != nil && ret == C.tOffset(-1) {
@@ -478,8 +482,8 @@ func (fs *Fs) GetDefaultBlockSize() (int64, error) {
 	return int64(ret), nil
 }
 
-//Get the raw capacity of the filesystem.  
-//Returns the raw-capacity; -1 on error. 
+//Get the raw capacity of the filesystem.
+//Returns the raw-capacity; -1 on error.
 func (fs *Fs) GetCapacity() (int64, error) {
 	ret, err := C.hdfsGetCapacity(fs.cptr)
 	if err != nil && ret == C.tOffset(-1) {
@@ -489,7 +493,7 @@ func (fs *Fs) GetCapacity() (int64, error) {
 }
 
 //Get the total raw size of all files in the filesystem.
-//Returns the total-size; check on error. 
+//Returns the total-size; check on error.
 func (fs *Fs) GetUsed() (int64, error) {
 	ret, err := C.hdfsGetUsed(fs.cptr)
 	if err != nil && ret == C.tOffset(-1) {

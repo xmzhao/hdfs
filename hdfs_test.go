@@ -342,6 +342,14 @@ func TestDir(t *testing.T) {
 		}
 
 		// cleanup
+		err = fs.Exists(directory)
+		if err != nil {
+			return fmt.Errorf("Error on testing directory existence: %v\n", err)
+		}
+		err = fs.Exists(srcPath)
+		if err != nil {
+			return fmt.Errorf("Error on testing file existence: %v\n", err)
+		}
 		err = fs.Delete(directory)
 		if err != nil {
 			return fmt.Errorf("Error on delete directory: %v\n", err)
@@ -351,15 +359,18 @@ func TestDir(t *testing.T) {
 			return fmt.Errorf("Error on delete file: %v\n", err)
 		}
 		err = fs.Exists(directory)
-		if err != nil {
+		if err == nil {
 			return fmt.Errorf("Error on testing directory existence: %v\n", err)
 		}
 		err = fs.Exists(srcPath)
-		if err != nil {
+		if err == nil {
 			return fmt.Errorf("Error on testing file existence: %v\n", err)
 		}
 		return nil
 	}()
+	if err != nil {
+		t.Errorf("%v", err)
+	}
 }
 
 func TestAppend(t *testing.T) {
