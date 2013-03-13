@@ -3,10 +3,10 @@
 package hdfs
 
 /*
-#cgo linux CFLAGS: -I/data1/home/xueminzhao/soft/hadoop-1.0.3/src/c++/install/include/hadoop -I/usr/local/jdk/include
-#cgo linux LDFLAGS: -L/data1/home/xueminzhao/soft/hadoop-1.0.3/src/c++/install/lib -lhdfs -L/usr/local/jdk/jre/lib/amd64/server -ljvm
-#cgo darwin CFLAGS: -I/data1/home/xueminzhao/soft/hadoop-1.0.3/src/c++/install/include/hadoop -I/Library/Java//JavaVirtualMachines/jdk1.7.0_09.jdk/Contents/Home/include/ -I/Library/Java//JavaVirtualMachines/jdk1.7.0_09.jdk/Contents/Home/include/darwin
-#cgo darwin LDFLAGS: -L/data1/home/xueminzhao/soft/hadoop-1.0.3/src/c++/install/lib -lhdfs -framework JavaVM
+#cgo linux CFLAGS: -I../../wangkuiyi/peacock/cpp/thirdparty/libhdfs-1.0.3 -I/usr/local/jdk/include
+#cgo linux LDFLAGS: -L../../wangkuiyi/peacock/cpp/thirdparty/libhdfs-1.0.3/lib64_release -lhdfs -L/usr/local/jdk/jre/lib/amd64/server -ljvm
+#cgo darwin CFLAGS: -I../../wangkuiyi/peacock/cpp/thirdparty/libhdfs-1.0.3 -I/Library/Java//JavaVirtualMachines/jdk1.7.0_09.jdk/Contents/Home/include/ -I/Library/Java//JavaVirtualMachines/jdk1.7.0_09.jdk/Contents/Home/include/darwin
+#cgo darwin LDFLAGS: -L../../wangkuiyi/peacock/cpp/thirdparty/libhdfs-1.0.3/lib64_release -lhdfs -framework JavaVM
 #include "hdfs.h"
 
 int getlen(char*** ptr) {

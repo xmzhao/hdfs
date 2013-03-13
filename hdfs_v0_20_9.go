@@ -3,9 +3,8 @@
 package hdfs
 
 /*
-#cgo linux CFLAGS: -I/data1/home/xueminzhao/soft/hadoop-0.20.9/src/c++/install/include/hadoop -I/usr/local/jdk/include
-#cgo linux LDFLAGS: -L/data1/home/xueminzhao/soft/hadoop-0.20.9/src/c++/install/lib -lhdfs -L/usr/local/jdk/jre/lib/amd64/server -ljvm
-#cgo darwin LDFLAGS: -L/data1/home/xueminzhao/soft/hadoop-1.0.3/src/c++/install/lib -lhdfs -framework JavaVM
+#cgo linux CFLAGS: -I../../wangkuiyi/peacock/cpp/thirdparty/libhdfs-0.20.9 -I/usr/local/jdk/include
+#cgo linux LDFLAGS: -L../../wangkuiyi/peacock/cpp/thirdparty/libhdfs-0.20.9/lib64_release -lhdfs -L/usr/local/jdk/jre/lib/amd64/server -ljvm
 #include "hdfs.h"
 
 int getlen(char*** ptr) {
